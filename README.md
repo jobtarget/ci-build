@@ -9,7 +9,7 @@ these additional tools:
 | [Docker][4]     | 19.0.3  | Containerization engine.                  |
 | [AWS CLI][1]    | 2.0.42  | Interacting with AWS.                     |
 | [gomplate][2]   | 3.7.0   | A templating tool (written in go)         |
-| [Terraform][3]  | 0.13.0  | Infrastructure as code tool.              |
+| [Terraform][3]  | 0.13.1  | Infrastructure as code tool.              |
 
 
 ## AWS Convenience Scripts

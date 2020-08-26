@@ -1,11 +1,15 @@
 FROM docker:19.03.8
 
+# See: https://about.gitlab.com/releases/2019/07/31/docker-in-docker-with-docker-19-dot-03/
+ENV DOCKER_DRIVER="overlay2"
+ENV DOCKER_TLS_CERTDIR=""
+
 # Pin versions installed
 # ----------------------
 # Terraform: https://github.com/hashicorp/terraform/tags
 # Gomplate:  https://github.com/hairyhenderson/gomplate/releases
 # AWS CLI:   https://github.com/aws/aws-cli/releases
-ARG TERRAFORM_VERSION="0.13.0"
+ARG TERRAFORM_VERSION="0.13.1"
 ARG GOMPLATE_VERSION="3.7.0"
 ARG AWS_CLI_VERSION="2.0.42"
 
