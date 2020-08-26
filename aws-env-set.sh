@@ -12,15 +12,17 @@ case $CI_ENVIRONMENT_NAME in
   prod|production|Production)
     # Use the _PROD version of credentials stored as CI variables in GitLab
     export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_PROD
-    export AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY_PROD
-    export AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY_PROD
+    export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD
+    export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD
+    export AWS_ECR_HOST=$AWS_ECR_HOST_PROD
     green "Using production AWS credentials."
     ;;
   uat|UAT|staging|Staging|stg|qa|QA|dev|development|Development|Dev|DEV)
     # Use the _DEV version of credentials stored as CI variables in GitLab
     export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_DEV
-    export AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY_DEV
-    export AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY_DEV
+    export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_DEV
+    export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_DEV
+    export AWS_ECR_HOST=$AWS_ECR_HOST_DEV
     green "Using development AWS credentials."
     ;;
   *)
