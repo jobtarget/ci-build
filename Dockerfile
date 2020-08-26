@@ -12,6 +12,7 @@ ENV DOCKER_TLS_CERTDIR=""
 ARG TERRAFORM_VERSION="0.13.1"
 ARG GOMPLATE_VERSION="3.7.0"
 ARG AWS_CLI_VERSION="2.0.42"
+ARG JQ_VERSION="1.6"
 
 # Install CLI color helper scripts
 COPY colors.sh .
@@ -68,8 +69,6 @@ RUN blue "Installing gomplate (${GOMPLATE_VERSION})" && \
     curl -o /usr/local/bin/gomplate -sSL "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-amd64" && \
     chmod 755 /usr/local/bin/gomplate
 
-
-
 # Install Terraform
 ENV GOPATH=/usr/local
 RUN blue "Installing Terraform (${TERRAFORM_VERSION})" && \
@@ -77,3 +76,8 @@ RUN blue "Installing Terraform (${TERRAFORM_VERSION})" && \
     git clone --depth 1 --branch "v${TERRAFORM_VERSION}" https://github.com/hashicorp/terraform.git && \
     cd terraform && \
     go install
+
+
+RUN blue "Installing jq (${JQ_VERSION})" && \
+    curl -o /usr/local/bin/jq -sSL "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64" && \
+    chmod 755 /usr/local/bin/jq
