@@ -60,6 +60,8 @@ COPY aws-ecr-login.sh /usr/local/bin/aws-ecr-login
 # Install helper script for deploying a cluster and service in ECR
 COPY aws-ecs-deploy.sh /usr/local/bin/aws-ecs-deploy
 
+# Install the environment selector helper script
+COPY aws-env-set.sh /usr/local/bin/aws-env-set
 
 # Install Gomplate tool - https://docs.gomplate.ca
 RUN blue "Installing gomplate (${GOMPLATE_VERSION})" && \
