@@ -34,3 +34,4 @@ $: aws-ecs-deploy "cluster-name" ["service-name"]
 [2]:https://docs.gomplate.ca
 [3]:https://www.terraform.io
 [4]:https://www.docker.com/get-started
+[5]:https://stedolan.github.io/jq/
