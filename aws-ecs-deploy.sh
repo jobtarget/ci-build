@@ -2,12 +2,10 @@
 set -eu
 
 CLUSTER=$1
-SERVICE=$1
-if [ -n "$2" ]; then
-  SERVICE=$2
-fi
+SERVICE=${2:-$CLUSTER}
 
-green "Cluster Name: ${CLUSTER}"
-green "Service Name: ${SERVICE}"
+green "Deploying ECS cluster..."
+blue "Cluster Name: ${CLUSTER}"
+blue "Service Name: ${SERVICE}"
 
 aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment

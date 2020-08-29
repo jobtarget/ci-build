@@ -1,38 +1,32 @@
 #!/bin/sh
 set -eu
 
-# This script is very customized to our specific use case and not very clever.  The
-# aim is to export the correct environment variables for the AWS CLI to be able to
-# connect.  We currently use a "dev" account and a "prod" account in AWS.
+# CI_ENVIRONMENT_NAME is set by GitLab CI on deploy jobs only
+ENV=${1:-$CI_ENVIRONMENT_NAME}
 
+blue "Attempting to connect to AWS deployment environment labeled '${ENV}'..."
 
-# This presumes you are running under GitLab
-# See: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
-case $CI_ENVIRONMENT_NAME in
-  prod|production|Production)
-    # Use the _PROD version of credentials stored as CI variables in GitLab
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_PROD
-    AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD
-    AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_PROD
-    AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID_PROD
-    green "Using production AWS credentials."
-    ;;
-  uat|UAT|staging|Staging|stg|qa|QA|dev|development|Development|Dev|DEV)
-    # Use the _DEV version of credentials stored as CI variables in GitLab
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_DEV
-    AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_DEV
-    AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_DEV
-    AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID_DEV
-    green "Using development AWS credentials."
-    ;;
-  *)
-    red "Unknown environment. 😱  You're on your own..."
-    exit 0
-    ;;
-esac
+# Convert $ENV to lowercase
+ENV=$(echo "{{strings.ToLower \"${ENV}\"}}" | gomplate);
 
+# Filter the JSON-formatted $AWS_ENV_JSON to select the values of our targeted account
+AWS_ACCT_ALIAS=$(echo $AWS_ENV_JSON           | jq -r ".${ENV}")
+
+blue "Using account config for '${AWS_ACCT_ALIAS}'"
+
+green "Extracting configuration information from \$AWS_CONFIG_JSON..."
+# Select the specific account details into variables
+AWS_DEFAULT_REGION=$(echo $AWS_CONFIG_JSON    | jq -r ".${AWS_ACCT_ALIAS} .default_region")
+AWS_ACCOUNT_ID=$(echo $AWS_CONFIG_JSON        | jq -r ".${AWS_ACCT_ALIAS} .aws_account_id")
+AWS_ACCESS_KEY_ID=$(echo $AWS_CONFIG_JSON     | jq -r ".${AWS_ACCT_ALIAS} .aws_access_key_id")
+AWS_SECRET_ACCESS_KEY=$(echo $AWS_CONFIG_JSON | jq -r ".${AWS_ACCT_ALIAS} .aws_secret_access_key")
+
+# Authenticate the AWS CLI
+green "Authenticating..."
 aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 aws configure set default.region $AWS_DEFAULT_REGION
+
+# Authenticate Docker with our ECR account
 aws ecr get-login-password --region $AWS_DEFAULT_REGION | \
     docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"

@@ -55,9 +55,6 @@ RUN blue "Installing AWS CLI (${AWS_CLI_VERSION})" \
     && rm glibc-bin-${GLIBC_VER}.apk \
     && rm -rf /var/cache/apk/*
 
-# Insall helper script for logging into ECR
-COPY aws-ecr-login.sh /usr/local/bin/aws-ecr-login
-
 # Install helper script for deploying a cluster and service in ECR
 COPY aws-ecs-deploy.sh /usr/local/bin/aws-ecs-deploy
 
