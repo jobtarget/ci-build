@@ -55,12 +55,6 @@ RUN blue "Installing AWS CLI (${AWS_CLI_VERSION})" \
     && rm glibc-bin-${GLIBC_VER}.apk \
     && rm -rf /var/cache/apk/*
 
-# Install helper script for deploying a cluster and service in ECR
-COPY aws-ecs-deploy.sh /usr/local/bin/aws-ecs-deploy
-
-# Install the environment selector helper script
-COPY aws-env-set.sh /usr/local/bin/aws-env-set
-
 # Install Gomplate tool - https://docs.gomplate.ca
 RUN blue "Installing gomplate (${GOMPLATE_VERSION})" && \
     curl -o /usr/local/bin/gomplate -sSL "https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-amd64" && \
@@ -74,7 +68,12 @@ RUN blue "Installing Terraform (${TERRAFORM_VERSION})" && \
     cd terraform && \
     go install
 
-
 RUN blue "Installing jq (${JQ_VERSION})" && \
     curl -o /usr/local/bin/jq -sSL "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64" && \
     chmod 755 /usr/local/bin/jq
+
+# Install helper script for deploying a cluster and service in ECR
+COPY aws-ecs-deploy.sh /usr/local/bin/aws-ecs-deploy
+
+# Install the environment selector helper script
+COPY aws-env-set.sh /usr/local/bin/aws-env-set

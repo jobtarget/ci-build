@@ -20,6 +20,7 @@ AWS_DEFAULT_REGION=$(echo $AWS_CONFIG_JSON    | jq -r ".${AWS_ACCT_ALIAS} .defau
 AWS_ACCOUNT_ID=$(echo $AWS_CONFIG_JSON        | jq -r ".${AWS_ACCT_ALIAS} .aws_account_id")
 AWS_ACCESS_KEY_ID=$(echo $AWS_CONFIG_JSON     | jq -r ".${AWS_ACCT_ALIAS} .aws_access_key_id")
 AWS_SECRET_ACCESS_KEY=$(echo $AWS_CONFIG_JSON | jq -r ".${AWS_ACCT_ALIAS} .aws_secret_access_key")
+AWS_ECR_URL="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
 
 # Authenticate the AWS CLI
 green "Authenticating..."
@@ -27,6 +28,8 @@ aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 aws configure set default.region $AWS_DEFAULT_REGION
 
-# Authenticate Docker with our ECR account
+green "Authenticating Docker with ECR..."
 aws ecr get-login-password --region $AWS_DEFAULT_REGION | \
-    docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+    docker login --username AWS --password-stdin $AWS_ECR_URL
+
+echo "{\"ecr_repo\":\"${AWS_ECR_URL}\"}"
