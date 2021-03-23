@@ -9,7 +9,7 @@ ENV DOCKER_TLS_CERTDIR=""
 # Terraform: https://github.com/hashicorp/terraform/tags
 # Gomplate:  https://github.com/hairyhenderson/gomplate/releases
 # AWS CLI:   https://github.com/aws/aws-cli/releases
-ARG TERRAFORM_VERSION="0.13.1"
+ARG TERRAFORM_VERSION="0.13.6"
 ARG GOMPLATE_VERSION="3.7.0"
 ARG AWS_CLI_VERSION="2.0.42"
 ARG JQ_VERSION="1.6"
@@ -38,19 +38,19 @@ RUN blue "Installing AWS CLI (${AWS_CLI_VERSION})" \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-bin-${GLIBC_VER}.apk \
     && apk add --no-cache \
-        glibc-${GLIBC_VER}.apk \
-        glibc-bin-${GLIBC_VER}.apk \
+    glibc-${GLIBC_VER}.apk \
+    glibc-bin-${GLIBC_VER}.apk \
     && curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o awscliv2.zip \
     && unzip awscliv2.zip \
     && aws/install \
     && rm -rf \
-        awscliv2.zip \
-        aws \
-        /usr/local/aws-cli/v2/*/dist/aws_completer \
-        /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
-        /usr/local/aws-cli/v2/*/dist/awscli/examples \
+    awscliv2.zip \
+    aws \
+    /usr/local/aws-cli/v2/*/dist/aws_completer \
+    /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
+    /usr/local/aws-cli/v2/*/dist/awscli/examples \
     && apk --no-cache del \
-        binutils \
+    binutils \
     && rm glibc-${GLIBC_VER}.apk \
     && rm glibc-bin-${GLIBC_VER}.apk \
     && rm -rf /var/cache/apk/*
